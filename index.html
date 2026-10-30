@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Viaje Rodea · Europa</title>
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151E26" media="(prefers-color-scheme: dark)">
+<meta name="robots" content="noindex,nofollow">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Viaje Rodea">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="styles.css">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<header><div class="in">
+  <div class="row" style="justify-content:space-between">
+    <h1>Viaje Rodea · Europa</h1>
+    <span class="sub mono" id="sync"></span>
+  </div>
+  <div class="pills" id="cityPills" hidden></div>
+</div></header>
+<main class="wrap" id="app"><div class="login"><div class="card"><h3>Cargando…</h3></div></div></main>
+<nav class="bottom" aria-label="Secciones"><div class="in">
+  <button data-v="hoy"><span class="i">☀︎</span>Hoy</button>
+  <button data-v="ciudades"><span class="i">⌖</span>Ciudades</button>
+  <button data-v="boletos"><span class="i">🎟</span>Boletos</button>
+  <button data-v="gastos"><span class="i">€</span>Gastos</button>
+  <button data-v="util"><span class="i">☰</span>Útil</button>
+</div></nav>
+<script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,8 +1,8 @@
 import * as F from "./firebase.js";
 import CONFIG from "./config.js";
 
-let D=null,CITIES=[],CN={},STAY={},BOOK=[],PAY=[],EMB=[],MSG=[],PTS=[],LEGS=[],STN=[],RATES_DEF={},PHR=[],RATES={};
-function setContent(c){D=c;CITIES=c.cities;CN=Object.fromEntries(CITIES.map(x=>[x.k,x]));CN.gen={k:"gen",n:"General",f:"📋"};STAY=c.stay;BOOK=c.book;PAY=c.pay;EMB=c.emb;MSG=c.msg;PTS=c.pts;LEGS=c.legs;STN=c.stn;RATES_DEF=c.rates;PHR=c.phr;RATES={...RATES_DEF};try{Object.assign(RATES,JSON.parse(localStorage.getItem("rates")||"{}"))}catch(e){}}
+let D=null,SUPER={},CITIES=[],CN={},STAY={},BOOK=[],PAY=[],EMB=[],MSG=[],PTS=[],LEGS=[],STN=[],RATES_DEF={},PHR=[],RATES={};
+function setContent(c){D=c;CITIES=c.cities;CN=Object.fromEntries(CITIES.map(x=>[x.k,x]));CN.gen={k:"gen",n:"General",f:"📋"};STAY=c.stay;BOOK=c.book;PAY=c.pay;EMB=c.emb;MSG=c.msg;PTS=c.pts;LEGS=c.legs;STN=c.stn;RATES_DEF=c.rates;PHR=c.phr;SUPER=c.super||{};RATES={...RATES_DEF};try{Object.assign(RATES,JSON.parse(localStorage.getItem("rates")||"{}"))}catch(e){}}
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const maps=q=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(q);
@@ -97,7 +97,7 @@ function vHoy(){
  }
  return o;
 }
-const SUBS=[["plan","Plan"],["boletos","Boletos"],["hosp","Hospedaje"],["gordos","Gordos"],["compras","Compras"],["pend","Pendientes"]];
+const SUBS=[["plan","Plan"],["boletos","Boletos"],["hosp","Hospedaje"],["gordos","Gordos"],["compras","Compras"],["super","Súper"],["pend","Pendientes"]];
 function vCiudad(){
  const k=S.city,c=CN[k];
  let o=`<div class="cityband" style="--c:var(--${k});margin-top:16px"><h2 style="margin:0">${c.f} ${c.n}</h2><div class="sub">${c.dates} · moneda ${c.cur}</div></div>
@@ -105,6 +105,9 @@ function vCiudad(){
  if(S.sub==="plan"){o+=D.days.filter(d=>d.city===k).map(d=>dayCard(d,false)).join("");}
  if(S.sub==="boletos"){const b=BOOK.filter(b=>b.city===k);o+=b.length?b.map(bookCard).join(""):`<div class="card sub">Sin boletos comprados para esta ciudad.</div>`;}
  if(S.sub==="hosp")o+=stayCard(k);
+ if(S.sub==="super"){const sp=SUPER[k];if(sp){if(sp.close)o+=`<div class="alert">🗓 ${esc(sp.close)}</div>`;if(sp.note)o+=`<div class="sub">${esc(sp.note)}</div>`;
+  o+=sp.list.map(([n,a,dd,h,st])=>`<div class="card cityband" style="--c:var(--${k})"><div class="row" style="justify-content:space-between"><h3>${st?"⭐ ":""}${esc(n)}</h3><span class="mono sub">${esc(dd)}</span></div><div class="small">${esc(a)}</div><div class="sub">${esc(h)}</div><div class="row"><a class="btn sm" href="${maps(n.replace(/\s*\(.*\)/,"")+", "+a)}" target="_blank" rel="noopener">🗺 Abrir en Maps</a></div></div>`).join("");
+  o+=`<div class="sub">Horarios regulares de Google Maps (consultados 30 oct 2026). En festivos pueden cambiar.</div>`}}
  if(S.sub==="gordos")o+=D.gordos.filter(g=>g.city===k).map(g=>`<div class="card"><h3>${esc(g.name)}</h3><div class="small">${esc(g.desc)}</div>
   ${g.o1?`<div class="g-o"><b>${esc(g.o1)}</b><span class="mono sub">${esc(g.p1)} · ${esc(g.m1)}</span><a class="small" href="${maps(g.o1)}" target="_blank" rel="noopener">Maps ↗</a></div>`:""}
   ${g.o2?`<div class="g-o"><b>${esc(g.o2)}</b><span class="mono sub">${esc(g.p2)} · ${esc(g.m2)}</span><a class="small" href="${maps(g.o2)}" target="_blank" rel="noopener">Maps ↗</a></div>`:""}

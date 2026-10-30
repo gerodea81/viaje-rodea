@@ -2,7 +2,7 @@
 // el acceso a los datos lo controlan las reglas de seguridad de Firestore).
 export default {
   tripId: "rodea-2026",
-  owner: "PENDIENTE",
+  owner: "yayornoth@gmail.com",
   firebase: {
     apiKey: "AIzaSyA16IIoYdUANnVWaXuvQPpVGRpJZT5K2SM",
     authDomain: "viaje-rodea.firebaseapp.com",

@@ -285,8 +285,8 @@ async function refresh(){
   }
   for(const k of Object.keys(idx))if(!ts.docs.some(d=>d.id===k))delete idx[k];
   await IDB.set("tixIndex",idx);S.tix=idx;
-  await IDB.set("lastSync",Date.now());
-  render();
+  await IDB.set("lastSync",Date.now());S.synced=true;
+  if(D)render();else if(!S.locked)emptyView();
  }catch(e){
   console.error(e);
   if(e&&e.code==="permission-denied"){await IDB.clear();loginView("Este correo no está autorizado para ver el viaje.");try{await F.signOut(auth)}catch(x){}}
@@ -309,7 +309,7 @@ async function start(user){
  else afterUnlock();
  listen();
  await refresh();
- if(!D&&!S.locked)loginView(navigator.onLine?"Todavía no hay datos del viaje cargados.":"Necesitas internet la primera vez para descargar el viaje.");
+ if(!D&&!S.locked)emptyView();
 }
 
 // --------- PIN de 4 dígitos (por teléfono) ---------
@@ -329,7 +329,11 @@ function pinView(mode,msg){
  </div></div>`);
  setTimeout(()=>{const i=document.querySelector("#pinForm input");if(i)i.focus()},50);
 }
-function afterUnlock(){unlocked=true;setLocked(false);if(D)render();else shell(`<div class="login"><div class="card"><h3>Descargando tu viaje…</h3><div class="sub">La primera vez necesita internet. Después funciona sin señal.</div></div></div>`)}
+function emptyView(){
+ if(S.owner)shell(`<div class="login"><div class="stack" style="width:100%;max-width:520px"><div class="card"><h3>Todavía no hay viaje cargado</h3><div class="sub">Como administrador, importa el paquete del viaje (.json).</div></div>${adminHTML()}</div></div>`);
+ else shell(`<div class="login"><div class="card"><h3>Todavía no hay viaje cargado</h3><div class="sub">Cuando Gerardo lo cargue, aparecerá aquí. ${navigator.onLine?"":"Necesitas internet la primera vez."}</div><button class="btn sm" id="resync">Revisar de nuevo</button></div></div>`);
+}
+function afterUnlock(){unlocked=true;setLocked(false);if(D)render();else if(S.synced)emptyView();else shell(`<div class="login"><div class="card"><h3>Descargando tu viaje…</h3><div class="sub">La primera vez necesita internet. Después funciona sin señal.</div></div></div>`)}
 document.addEventListener("submit",async e=>{
  if(e.target.id!=="pinForm")return;e.preventDefault();
  const pin=String(new FormData(e.target).get("pin")||"");const mode=e.target.dataset.mode;
